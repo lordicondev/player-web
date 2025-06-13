@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <title>Playback control</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="stylesheet" type="text/css" href="/main.css" />
+    <script type="module" src="/05-playback-control.ts"></script>
+</head>
+
+<body>
+    <div class="icon"></div>
+
+    <div>
+        <input type="range" id="seek" min="0" max="1" step="1" value="0">
+        <label>
+            <input type="checkbox" id="loop">
+            Loop
+        </label>
+        <button id="play-pause">Play</button>
+    </div>
+</body>
+
+</html>
