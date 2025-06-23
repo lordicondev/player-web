@@ -462,6 +462,23 @@ export class Player {
     }
 
     /**
+     * Sets the animation segment to play.
+     * If no segment is provided, resets to the default segment.
+     * @param segment Optional segment as [start, end] frame numbers.
+     */
+    setSegment(segment?: [number, number]) {
+        if (!this._lottieInstance) throw new Error('Player not initialized');
+
+        if (segment) {
+            this._lottieInstance.setSegment(segment[0], segment[1]);
+        } else {
+            this._lottieInstance.resetSegments(true);
+        }
+
+        this._lottieInstance.goToAndStop(0, true);
+    }
+
+    /**
      * Sets multiple icon properties at once. 
      * Any property not provided will be reset to its default value.
      * @param properties Properties to assign.
@@ -598,12 +615,9 @@ export class Player {
             }
         }
 
-        if (this._state) {
-            this._lottieInstance.setSegment(this._state.time, this._state.time + this._state.duration + 1);
-        } else {
-            this._lottieInstance.resetSegments(true);
-        }
-        this.seekToStart();
+        this.setSegment(
+            this._state ? [this._state.time, this._state.time + this._state.duration + 1] : undefined,
+        )
 
         if (isPlaying) {
             this.pause();

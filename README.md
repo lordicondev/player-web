@@ -115,12 +115,13 @@ __Methods__
 - `init()`: Initialize the player (called automatically by default).
 - `destroy()`: Destroy the player and release resources.
 - `play()`: Play animation.
+- `playFromStart()`: Play from the beginning of the current state.
 - `pause()`: Pause animation.
 - `stop()`: Stop animation.
 - `seek(frame)`: Go to specific frame.
 - `seekToStart()`: Move to the first frame and stop.
 - `seekToEnd()`: Move to the last frame and stop.
-- `playFromStart()`: Play from the beginning of the current state.
+- `setSegment(segment)`: Sets the animation segment to play.
 
 __Properties__
 
