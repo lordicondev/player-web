@@ -159,8 +159,6 @@ export class Player {
             return newState;
         }).filter((c: IconState) => c.duration > 0);
 
-        console.log('states', this._availableStates);
-
         // Handle new and legacy icon files.
         if (this._availableStates.length) {
             // Remove unsupported stroke values.
