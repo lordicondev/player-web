@@ -177,4 +177,5 @@ export interface IconState {
     time: number;
     duration: number;
     default?: boolean;
+    params: string[];
 }

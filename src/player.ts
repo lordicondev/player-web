@@ -129,13 +129,25 @@ export class Player {
 
         // Parse available states from Lottie markers.
         this._availableStates = (data.markers || []).map((c: any) => {
-            const [partA, partB] = c.cm.split(':');
+            const parts: string[] = c.cm.split(':');
+
             const newState: IconState = {
                 time: c.tm,
                 duration: c.dr,
-                name: partB || partA,
-                default: partB && partA.includes('default') ? true : false,
+                name: '',
+                default: false,
+                params: [],
             };
+
+            // Read default flag from the first part if present.
+            if (parts[0] === 'default') {
+                parts.shift();
+                newState.default = true;
+            }
+
+            // Parse state name and parameters from the remaining parts.
+            newState.name = parts[0];
+            newState.params = parts.slice(1, parts.length);
 
             // Set initial state if it matches, or use default if not specified.
             if (newState.name === this._initialProperties.state) {
@@ -146,6 +158,8 @@ export class Player {
 
             return newState;
         }).filter((c: IconState) => c.duration > 0);
+
+        console.log('states', this._availableStates);
 
         // Handle new and legacy icon files.
         if (this._availableStates.length) {
