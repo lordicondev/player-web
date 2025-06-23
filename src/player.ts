@@ -24,6 +24,12 @@ const DEFAULT_LOTTIE_WEB_OPTIONS: Omit<AnimationConfig, 'container'> = {
 }
 
 /**
+ * Supported state flags for icons.
+ * Currently only 'default' is supported.
+ */
+const SUPPORTED_STATE_FLAGS = ['default'];
+
+/**
  * Creates a Proxy for convenient color manipulation.
  * Allows direct access to color properties by name.
  * 
@@ -139,10 +145,17 @@ export class Player {
                 params: [],
             };
 
-            // Read default flag from the first part if present.
-            if (parts[0] === 'default') {
+            // Read state flags from the first part of the marker name.
+            while (SUPPORTED_STATE_FLAGS.includes(parts[0])) {
+                switch (parts[0]) {
+                    case 'default':
+                        newState.default = true;
+                        break;
+                    default:
+                        throw new Error(`Unsupported state flag: ${parts[0]}`);
+                }
+
                 parts.shift();
-                newState.default = true;
             }
 
             // Parse state name and parameters from the remaining parts.
