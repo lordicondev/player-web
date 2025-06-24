@@ -121,7 +121,7 @@ __Methods__
 - `seek(frame)`: Go to specific frame.
 - `seekToStart()`: Move to the first frame and stop.
 - `seekToEnd()`: Move to the last frame and stop.
-- `setSegment(segment)`: Sets the animation segment to play.
+- `switchSegment(segment)`: Sets the animation segment to play.
 
 __Properties__
 
@@ -138,6 +138,7 @@ __Properties__
 - `frameCount`: Total number of frames in the animation (number).
 - `duration`: Duration of the animation in seconds (number).
 - `properties`: Get or set multiple properties at once. Setter: Any property not provided will be reset to its default value (overwrites all properties). Getter: Returns the current properties object.
+- `segment`: Gets the current segment of the animation as [start, end] frame numbers.
 - `lottieInstance`: Access to the underlying internal Lottie player instance.
 - `lottieProperties`: Array of customizable properties for the icon.
 
