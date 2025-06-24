@@ -479,7 +479,7 @@ export class Player {
      * If no segment is provided, resets to the default segment.
      * @param segment Optional segment as [start, end] frame numbers.
      */
-    setSegment(segment?: [number, number]) {
+    switchSegment(segment?: [number, number]) {
         if (!this._lottieInstance) throw new Error('Player not initialized');
 
         if (segment) {
@@ -628,7 +628,7 @@ export class Player {
             }
         }
 
-        this.setSegment(
+        this.switchSegment(
             this._state ? [this._state.time, this._state.time + this._state.duration + 1] : undefined,
         )
 
@@ -755,6 +755,19 @@ export class Player {
         if (!this._lottieInstance) throw new Error('Player not initialized');
 
         return this._lottieInstance.getDuration(true) - 1;
+    }
+
+    /**
+     * Gets the current segment of the animation as [start, end] frame numbers.
+     * @returns Segment as [start, end].
+     */
+    get segment(): [number, number] {
+        if (!this._lottieInstance) throw new Error('Player not initialized');
+
+        return [
+            this._lottieInstance.firstFrame,
+            this._lottieInstance.firstFrame + this._lottieInstance.totalFrames,
+        ];
     }
 
     /**
