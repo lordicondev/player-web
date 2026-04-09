@@ -17,7 +17,6 @@ const player = new Player(
     },
 );
 
-
 player.addEventListener('ready', () => {
     player.play();
 });

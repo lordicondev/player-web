@@ -115,6 +115,7 @@ export class Player {
 
     protected _state?: IconState;
     protected _availableStates: IconState[];
+    protected _animationFrameRate: number = 0;
 
     /**
      * Creates a new Player instance.
@@ -132,6 +133,9 @@ export class Player {
         this._container = container;
         this._iconData = data;
         this._initialProperties = properties || {};
+
+        // Parse animation frame rate for timing calculations.
+        this._animationFrameRate = data.fr || 30;
 
         // Parse available states from Lottie markers.
         this._availableStates = (data.markers || []).map((c: any) => {
@@ -729,6 +733,14 @@ export class Player {
      */
     get availableStates() {
         return this._availableStates;
+    }
+
+    /**
+     * Gets the frame rate of the animation.
+     * @returns Frame rate in frames per second.
+     */
+    get frameRate() {
+        return this._animationFrameRate;
     }
 
     /**
