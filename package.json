@@ -1,6 +1,6 @@
 {
     "name": "@lordicon/web",
-    "version": "1.0.1",
+    "version": "1.1.0",
     "description": "A lightweight and flexible player for seamlessly embedding, controlling, and customizing animated Lordicon icons in any web application.",
     "repository": "https://github.com/lordicondev/player-web",
     "homepage": "https://lordicon.com/",
@@ -24,15 +24,15 @@
     },
     "devDependencies": {
         "@lordicon/internal": "^0.5.0",
-        "vite": "^6.2.3",
-        "vite-plugin-dts": "^4.5.4",
-        "concurrently": "^9.1.2",
-        "eslint-config-prettier": "^9.1.0",
-        "eslint": "^8.54.0",
-        "prettier": "^3.2.5",
-        "typescript": "^5.3.2",
-        "@typescript-eslint/eslint-plugin": "^6.12.0",
-        "@typescript-eslint/parser": "^6.12.0",
+        "vite": "^8.0.16",
+        "vite-plugin-dts": "^5.0.2",
+        "concurrently": "^10.0.3",
+        "eslint-config-prettier": "^10.1.8",
+        "eslint": "^10.5.0",
+        "prettier": "^3.8.4",
+        "typescript": "^6.0.3",
+        "@typescript-eslint/eslint-plugin": "^8.61.1",
+        "@typescript-eslint/parser": "^8.61.1",
         "@types/node": "^22.13.13"
     }
 }
