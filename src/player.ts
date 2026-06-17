@@ -184,7 +184,7 @@ export class Player {
             }
 
             // Fallback to default state if initial is invalid.
-            if (this._initialProperties.state && !this._state) {
+            if (this._initialProperties.state && !this._state && this._initialProperties.state !== '*') {
                 this._state = this._availableStates.filter(c => c.default)[0];
             }
         }
@@ -624,6 +624,8 @@ export class Player {
 
         if (isNil(state)) {
             this._state = this._availableStates.filter(c => c.default)[0];
+        } else if (state === '*') {
+            this._state = undefined;
         } else if (state) {
             this._state = this._availableStates.filter(c => c.name === state)[0];
 
