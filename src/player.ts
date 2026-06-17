@@ -1,19 +1,16 @@
-import lottie, { AnimationConfig } from '@lordicon/internal';
-import { ColorMap, EventHandler, EventName, IconProperties, IconState, LegacyIconProperties, LottieAnimationInstance, LottieData, LottieProperty, PlaybackDirection, Stroke } from './interfaces';
+import lottie from '@lordicon/internal';
+import { ColorMap, EventHandler, EventName, IconProperties, IconState, LegacyIconProperties, LottieAnimationInstance, LottieData, LottieOptions, LottieProperty, PlaybackDirection, Stroke } from './interfaces';
 import { extractLottieProperties, resetLottieProperties, tupleColorToHex, updateLottieProperties } from './lottie';
 import { parseStroke } from './parsers';
 import { deepClone, get, isNil, set } from './utils';
 
-/**
- * LottieOptions type represents the configuration options for the Lottie player.
- */
-export type LottieOptions = Omit<AnimationConfig, 'container'>;
+export type { LottieOptions } from './interfaces';
 
 /**
  * Default options used by the Player.
  * These options are passed to the underlying Lottie player.
  */
-const DEFAULT_LOTTIE_WEB_OPTIONS: Omit<AnimationConfig, 'container'> = {
+const DEFAULT_LOTTIE_WEB_OPTIONS: LottieOptions = {
     loop: false,
     autoplay: false,
     rendererSettings: {

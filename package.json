@@ -1,6 +1,6 @@
 {
     "name": "@lordicon/web",
-    "version": "1.2.0",
+    "version": "1.2.1",
     "description": "A lightweight and flexible player for seamlessly embedding, controlling, and customizing animated Lordicon icons in any web application.",
     "repository": "https://github.com/lordicondev/player-web",
     "homepage": "https://lordicon.com/",

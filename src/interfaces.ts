@@ -55,6 +55,18 @@ export type LottieAnimationInstance = {
 };
 
 /**
+ * Configuration options for the underlying Lottie animation.
+ * Mirrors `@lordicon/internal`'s `AnimationConfig`, excluding `container`.
+ */
+export interface LottieOptions {
+    loop?: boolean;
+    autoplay?: boolean;
+    rendererSettings?: any;
+    initialSegment?: FrameSegment;
+    name?: string;
+}
+
+/**
  * Supported property types for Lottie animations.
  */
 export type LottiePropertyType = 'color' | 'slider' | 'point' | 'checkbox' | 'feature';
