@@ -1,148 +1,197 @@
 # Lordicon Web Player
 
-A lightweight and flexible player for seamlessly embedding, controlling, and customizing animated [Lordicon](https://lordicon.com/) icons in any web application.
-
-## Features
-
-- ✨ Simple API for controlling Lottie-based icon animations
-- 📦 Supports Lordicon icon files
-- 🎨 Easy customization of colors, stroke, and animation state
-- 🔔 Event system for reacting to animation lifecycle 
-- 🛡️ TypeScript support
-
-## Installation
+Plays an animated [Lordicon](https://lordicon.com/) icon from JavaScript, in any element: its
+states, colours and stroke.
 
 ```sh
 npm install @lordicon/web
 ```
 
-## Usage
-
-> **Note:**  
-> This repository contains an `examples` directory with a rich collection of usage examples and integration scenarios.  
-> Feel free to explore it for more advanced use cases and inspiration!
-
-### Basic Example
-
 ```js
 import { Player } from '@lordicon/web';
 
-const container = document.getElementById('icon');
-const data = /* Lottie JSON data */;
+const data = await (await fetch('/icons/lock.json')).json();
+const player = new Player(container, data);
 
-const player = new Player(container, data, {
-    colors: {
-        primary: '#ff0000',
-        secondary: '#0000ff',
-    },
-    stroke: 2,
-    state: 'in-reveal',
+container.addEventListener('pointerenter', () => player.play());
+```
+
+`data` is the icon's Lottie JSON. The icon plays its default state, usually a hover.
+
+## States
+
+An icon holds several animations, its states: `in-reveal`, `hover-jump`, `morph-unlocked`.
+
+```js
+player.states; // [{ name: 'in-reveal', time: 0, duration: 120, ... }, ...]
+player.play({ state: 'in-reveal' }); // load a state and play it from its start
+player.state = 'hover-jump'; // or only load it
+player.currentState; // { name: 'hover-jump', time: 160, ... }, for the helpers below
+player.state = '*'; // the whole file
+```
+
+A morph goes to a second look and back. With a ratio in its marker (`morph-select:0.5`) the
+state is two animations in a row, the way there and the way back, so play one half at a time:
+`play({ state })` would play both, and `reverse` would run both backwards. Without a ratio,
+the state is the way there, and the way back is the same frames played backwards:
+
+```js
+import { splitSegment, stateSegment } from '@lordicon/web';
+
+player.state = 'morph-select';
+const morph = player.currentState;
+const halves = splitSegment(morph); // null without a ratio
+
+if (halves) player.play({ segment: on ? halves[0] : halves[1] });
+else player.play({ segment: stateSegment(morph), reverse: !on });
+```
+
+## Colours and stroke
+
+```js
+player.colors.primary = 'red'; // any hex value or CSS colour name
+delete player.colors.primary; // the icon's own again
+player.colors = { secondary: '#08a88a' }; // replace them all; null resets
+player.stroke = 'bold'; // 'light', 'regular', 'bold', or 1, 2, 3; null resets
+```
+
+To swap one of the icon's colours wherever it is used, whatever its name:
+
+```js
+import { colorsByName } from '@lordicon/web';
+
+player.colors = colorsByName(player.defaultColors, { '#121331': '#ffffff' });
+```
+
+State, colours and stroke can also be given to the constructor:
+`new Player(container, data, { state: 'hover-jump', colors: { primary: 'red' }, stroke: 3 })`.
+
+## Playback
+
+```js
+player.pause();
+player.stop(); // back to the first frame
+player.seek('end'); // a frame, 'start' or 'end', and pause
+player.progress = 0.5; // halfway
+player.loop = true;
+player.speed = 2;
+player.direction = -1; // backwards
+
+player.play({ from: 'start' }); // restart
+player.play({ reverse: true }); // backwards, from the end
+player.play({ segment: [130, 191] }); // some frames
+```
+
+`play()` returns a promise: `true` when the animation plays to its end, `false` when
+something cuts it short: another `play()` with options, `stop()`, a new state, `destroy()`.
+It never rejects.
+
+```js
+if (await player.play({ state: 'in-reveal' })) player.play({ state: 'hover-jump' });
+```
+
+## Events
+
+```js
+player.addEventListener('complete', (event) => {
+    const { segment, direction, state } = event.detail;
 });
-
-player.play();
 ```
 
-### Customizing Properties
+| Event      | When                                                                 |
+| ---------- | -------------------------------------------------------------------- |
+| `ready`    | The animation exists. A listener added later still gets it.          |
+| `complete` | The animation played to its end, or its start when backwards.        |
+| `loop`     | A round of a looping animation ended; `complete` does not fire then. |
+| `frame`    | A frame was drawn.                                                   |
+| `refresh`  | Colours or stroke changed.                                           |
+| `destroy`  | `destroy()` ran.                                                     |
 
-You can update properties at any time:
+The player is an `EventTarget`: `{ once: true }` and `{ signal }` work.
+
+## Many icons on a page
+
+A player holds an animation and a copy of the icon data. With many icons on a page, create a
+player when its icon comes into view and destroy it when the icon leaves:
 
 ```js
-player.colors.primary = '#00ff00';
-player.stroke = 3;
-player.state = 'hover-jump';
+const player = new Player(container, data, null, { autoInit: false });
+
+player.init(); // when the icon is needed
+player.destroy(); // when it is not
 ```
 
-Or set multiple at once (all unspecified properties will be reset to their default values):
-
-```js
-player.properties = {
-    colors: { primary: '#123456' },
-    stroke: 1,
-    state: 'hover-jump',
-};
-```
-
-### Events
-
-Register event listeners:
-
-```js
-player.addEventListener('complete', () => {
-    console.log('Animation completed!');
-});
-```
-
-Supported events: 
-
-- `ready` – Fired when the player is initialized and ready to use.
-- `complete` – Fired when the animation finishes playing.
-- `frame` – Fired on each frame update.
-- `refresh` –  Fired when the player is refreshed, for example, after icon customization.
+- `autoInit: false` leaves rendering to `init()`. What is set before applies then.
+- `destroy()` empties the container. Keep one player per container: destroy the old one
+  before creating the next.
+- `init()` and `destroy()` can run more than once; a destroyed player does nothing.
+- `{ copy: false }` skips the copy of `data` when it was fetched for this player alone; the
+  renderer then changes it.
 
 ## API
 
-Player
+`new Player(container, data, properties?, options?)`, with `properties`
+`{ state, colors, stroke }` and `options` `{ autoInit, copy }`.
 
-__Constructor__
+| Member                                | What it does                                                            |
+| ------------------------------------- | ----------------------------------------------------------------------- |
+| `play(options?)`                      | Plays. `{ state, segment, from: 'start', reverse }`.                    |
+| `pause()`                             | Pauses where it is.                                                     |
+| `stop()`                              | Pauses on the first frame.                                              |
+| `seek(frame)`                         | Shows a frame, `'start'` or `'end'`, and pauses.                        |
+| `init()`, `destroy()`                 | Create and remove the animation.                                        |
+| `ready`, `readyPromise`               | Ready now; a promise of `true` when ready, `false` if destroyed first.  |
+| `playing`                             | Whether it plays.                                                       |
+| `state`                               | The state's name. `null` sets the default one, `'*'` the whole file.    |
+| `currentState`                        | The state as an object, `null` for the whole file.                      |
+| `states`                              | The icon's states.                                                      |
+| `segment`                             | The loaded frames, `[start, end)`. `null` goes back to the state's.     |
+| `frame`                               | The frame on screen.                                                    |
+| `frameCount`, `frameRate`, `duration` | Frames in the segment, frames per second, seconds at the current speed. |
+| `progress`                            | 0 to 1 through the segment. Setting it seeks.                           |
+| `direction`, `speed`, `loop`          | How it plays: `1` or `-1`, `1` by default, `false` by default.          |
+| `colors`, `defaultColors`             | The colours by name; the icon's own.                                    |
+| `stroke`                              | `1`, `2` or `3`; null when the icon has no stroke setting.              |
+| `properties`                          | State, colours and stroke at once. What is left out resets.             |
+| `renderer`, `controls`                | The animation and its effect controls, for what the player lacks.       |
 
-```ts
-new Player(container, data, properties, options)
+Also exported, from `@lordicon/utils-lottie`: `findState`, `defaultState`, `stateType`,
+`stateSegment`, `stateRatio`, `splitSegment`, `stateEndFrame`, `colorsByName`,
+`parseColors`, `parseStroke`, `resolveColor`, `strokeName`, `isIconData`.
+
+## Details
+
+**Frames** are absolute, as in the icon's markers: a state at frame 130 starts at `130`,
+whatever is loaded. A state's segment is `[tm, tm + dr + 1)`: its last keyframes sit on
+`tm + dr`, and that frame has to play for the state to reach its final pose. The last frame
+of a segment is `segment[1] - 1`.
+
+**`play()` without options** resumes where the icon is, and starts over once the segment has
+finished. With options it starts a new playback, and the previous promise gets `false`.
+
+**The default state** plays when none is given; `null` or an unknown name picks it too.
+An icon without one plays the whole file, from its first state to the end of its last.
+
+**Subclassing.** Every playback goes through `play()`, a state change during play included,
+so overriding that one method wraps them all.
+
+**Before `init()`**, `state`, `speed`, `direction`, `loop`, colours and stroke can be set;
+they apply when it runs. `play()` resolves `false`.
+
+## Upgrading
+
+What changed from 1.x, and what to write instead: [CHANGELOG.md](CHANGELOG.md).
+
+## Development
+
+```sh
+npm install
+npm start          # the examples
+npm test           # Vitest, on the real renderer in happy-dom
+npm run check      # types, lint, formatting
+npm run build
 ```
 
-- `container` - The DOM element where the player will be rendered.
-- `data` - The animation data in Lottie JSON format. You can download it from [Lordicon](https://lordicon.com/).
-- `properties` - *(Optional)* Initial icon properties such as colors, stroke width, animation state, etc.  
+## License
 
-    Example:  
-    ```js
-    {
-        colors: { primary: '#ff0000' },
-        stroke: 2,
-        state: 'in-reveal'
-    }
-    ```
-- `options` - *(Optional)* Additional options. By default, the player is automatically initialized and ready to use immediately.
-
-    Example: 
-    ```js
-    {
-        autoInit: true
-    }
-    ```
-
-__Methods__
-
-- `init()`: Initialize the player (called automatically by default).
-- `destroy()`: Destroy the player and release resources.
-- `play()`: Play animation.
-- `playFromStart()`: Play from the beginning of the current state.
-- `pause()`: Pause animation.
-- `stop()`: Stop animation.
-- `seek(frame)`: Go to specific frame.
-- `seekToStart()`: Move to the first frame and stop.
-- `seekToEnd()`: Move to the last frame and stop.
-- `switchSegment(segment)`: Sets the animation segment to play.
-
-__Properties__
-
-- `colors`: Proxy for color manipulation (e.g., player.colors.primary = '#fff').
-- `stroke`: Stroke width (number or preset).
-- `state`: Current animation state (string).
-- `speed`: Playback speed.
-- `direction`: Playback direction (1 or -1).
-- `loop`: Looping (boolean).
-- `frame`: Current frame (number).
-- `playing`: Whether animation is playing (boolean).
-- `ready`: Whether player is ready (boolean).
-- `availableStates`: List of available states.
-- `frameCount`: Total number of frames in the animation (number).
-- `duration`: Duration of the animation in seconds (number).
-- `properties`: Get or set multiple properties at once. Setter: Any property not provided will be reset to its default value (overwrites all properties). Getter: Returns the current properties object.
-- `segment`: Gets the current segment of the animation as [start, end] frame numbers.
-- `lottieInstance`: Access to the underlying internal Lottie player instance.
-- `lottieProperties`: Array of customizable properties for the icon.
-
-__Events__
-
-- `addEventListener(name, handler)`: Register event handler. Supported event names: `'ready'`, `'complete'`, `'frame'`, `'refresh'`.
-- `removeEventListener(name, handler?)`: Remove event handler(s).
+MIT

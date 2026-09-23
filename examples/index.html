@@ -1,60 +1,33 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
+    <head>
+        <title>@lordicon/web examples</title>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <link rel="stylesheet" href="./main.css" />
+    </head>
 
-<head>
-    <meta charset="utf-8" />
-    <title>Examples</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <link rel="stylesheet" type="text/css" href="/main.css" />
-</head>
-
-<body>
-    <table>
-        <thead>
-            <tr>
-                <th>Index</th>
-                <th>Example</th>
-                <th>Description</th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr>
-                <td>01</td>
-                <td><a href="/01-play.html">Play</a></td>
-                <td>
-                    Learn how to trigger an animation using the <code>play</code> method.
-                </td>
-            </tr>
-            <tr>
-                <td>02</td>
-                <td><a href="/02-customization.html">Customization</a></td>
-                <td>
-                    Explore various ways to adjust the icon’s look and feel.
-                </td>
-            </tr>
-            <tr>
-                <td>03</td>
-                <td><a href="/03-states.html">States</a></td>
-                <td>
-                    See how to switch between different icon states.
-                </td>
-            </tr>
-            <tr>
-                <td>04</td>
-                <td><a href="/04-events.html">Events</a></td>
-                <td>
-                    Discover how to react to player events in your application.
-                </td>
-            </tr>
-            <tr>
-                <td>05</td>
-                <td><a href="/05-playback-control.html">Playback Control</a></td>
-                <td>
-                    Find out how to manage playback through the player API.
-                </td>
-            </tr>
-        </tbody>
-    </table>
-</body>
-
+    <body>
+        <h1>@lordicon/web</h1>
+        <ul>
+            <li><a href="/01-hover.html">Hover</a>: play the default state on pointer enter</li>
+            <li>
+                <a href="/02-states.html">States</a>: every state of an icon, and the whole file
+            </li>
+            <li>
+                <a href="/03-colors.html">Colours and stroke</a>: by name, back to the icon's own,
+                swapped by colour
+            </li>
+            <li>
+                <a href="/04-playback.html">Playback</a>: pause, stop, progress, loop, speed,
+                direction
+            </li>
+            <li><a href="/05-morph.html">Morph</a>: with a ratio and without</li>
+            <li><a href="/06-sequence.html">Sequence</a>: chaining with the promise of play()</li>
+            <li><a href="/07-events.html">Events</a>: every event with its detail</li>
+            <li>
+                <a href="/08-many-icons.html">Many icons</a>: players only for the icons on screen
+            </li>
+        </ul>
+    </body>
 </html>

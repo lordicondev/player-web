@@ -1,16 +1,21 @@
 :root {
     --palette-font: #3c3c3c;
     --palette-primary: #08c18a;
-    --palette-bg-1: hsl(50deg 34% 85%);
-    --palette-bg-2: hsl(100deg 34% 85%);
-    --palette-bg-3: hsl(150deg 34% 85%);
+
+    font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
+    line-height: 1.5;
+    font-weight: 400;
 }
 
 body {
-    color: var(--palette-font);
-    padding: 10px;
     margin: 0;
-    line-height: 1.8;
+    padding: 0;
+    background: white;
+    color: var(--palette-font);
+}
+
+img {
+    display: block;
 }
 
 a {
@@ -35,11 +40,81 @@ th {
 }
 
 .icon {
-    display: inline-block;
-    width: 150px;
-    height: 150px;
+    display: block;
+    width: 128px;
+    height: 128px;
+    cursor: pointer;
+
+    svg {
+        width: 128px;
+        height: 128px;
+    }
 }
 
-.clickable {
-    cursor: pointer;
+body {
+    padding: 24px;
+}
+
+h1 {
+    font-size: 20px;
+    margin: 0 0 16px;
+}
+
+p {
+    max-width: 640px;
+}
+
+.tiles {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 16px;
+}
+
+figure {
+    margin: 0;
+    padding: 8px;
+    border: 1px solid #e5e5e5;
+    border-radius: 8px;
+    text-align: center;
+    font-size: 13px;
+}
+
+code,
+pre {
+    font-family: ui-monospace, monospace;
+    font-size: 13px;
+}
+
+.swatch {
+    display: inline-block;
+    width: 14px;
+    height: 14px;
+    margin-right: 6px;
+    vertical-align: middle;
+    border: 1px solid #0003;
+    border-radius: 3px;
+}
+
+.controls {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    align-items: center;
+    margin-bottom: 16px;
+}
+
+button {
+    font: inherit;
+}
+
+pre {
+    margin: 0;
+}
+
+.scroll {
+    height: 480px;
+    overflow: auto;
+    padding: 8px;
+    border: 1px solid #e5e5e5;
+    border-radius: 8px;
 }

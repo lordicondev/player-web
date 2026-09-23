@@ -1,0 +1,36 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <title>Colours and stroke</title>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <link rel="stylesheet" href="./main.css" />
+        <script type="module" src="/03-colors.ts"></script>
+    </head>
+
+    <body>
+        <p><a href="/">Examples</a></p>
+        <h1>Colours and stroke</h1>
+        <p>
+            Set a colour by name, change the stroke width, go back to the icon's own, or swap one of
+            the icon's colours for another. Hover plays.
+        </p>
+        <div class="tiles">
+            <figure id="figure"><div id="icon" class="icon"></div></figure>
+        </div>
+        <div class="controls">
+            <label>primary <input type="color" id="primary" /></label>
+            <label>secondary <input type="color" id="secondary" /></label>
+            <select id="stroke">
+                <option value="1">light</option>
+                <option value="2">regular</option>
+                <option value="3">bold</option>
+            </select>
+        </div>
+        <div class="controls">
+            <button id="swap">#121331 to white, on dark</button>
+            <button id="reset">reset</button>
+        </div>
+        <pre id="properties"></pre>
+    </body>
+</html>

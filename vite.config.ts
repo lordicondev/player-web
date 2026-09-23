@@ -1,31 +1,30 @@
-import { resolve, sep } from 'path';
+import { resolve } from 'node:path';
 import { defineConfig } from 'vite';
 import dts from 'vite-plugin-dts';
 
+/**
+ * The npm package: ESM with `@lordicon/utils-lottie` left external and the renderer
+ * (`@lordicon/internal`) bundled in, plus type declarations.
+ */
 export default defineConfig({
     plugins: [
         dts({
-            insertTypesEntry: true,
-            beforeWriteFile: (filePath, content) => {
-                return {
-                    filePath: filePath.replace(`${sep}dist${sep}src${sep}`, `${sep}dist${sep}`),
-                    content,
-                };
-            },
+            include: ['src'],
+            exclude: ['src/**/*.test.ts', 'src/testing/**'],
+            // Declarations mirror src/ but sit at the dist root, next to index.js.
+            beforeWriteFile: (filePath, content) => ({
+                filePath: filePath.replace('/dist/src/', '/dist/'),
+                content,
+            }),
         }),
     ],
     build: {
-        target: 'es2015',
+        target: 'es2022',
         lib: {
             formats: ['es'],
+            entry: resolve(import.meta.dirname, 'src', 'index.ts'),
             fileName: () => 'index.js',
-            entry: resolve(__dirname, 'src', 'index.ts'),
         },
-        rollupOptions: {
-            output: {
-                inlineDynamicImports: true,
-            },
-        },
-        emptyOutDir: true,
-    }
+        rollupOptions: { external: ['@lordicon/utils-lottie'] },
+    },
 });

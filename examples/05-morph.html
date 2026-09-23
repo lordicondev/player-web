@@ -1,0 +1,30 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <title>Morph</title>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <link rel="stylesheet" href="./main.css" />
+        <script type="module" src="/05-morph.ts"></script>
+    </head>
+
+    <body>
+        <p><a href="/">Examples</a></p>
+        <h1>Morph</h1>
+        <p>
+            A morph takes the icon to a second look and back. With a ratio in its marker
+            (<code>morph-select:0.5</code>) the way there and the way back are two halves; without
+            one, the state plays forwards, then backwards. Click an icon.
+        </p>
+        <div class="tiles">
+            <figure>
+                <div class="icon" id="with-ratio"></div>
+                <figcaption>morph-select:0.5, two halves</figcaption>
+            </figure>
+            <figure>
+                <div class="icon" id="without-ratio"></div>
+                <figcaption>morph-unlocked, forwards and backwards</figcaption>
+            </figure>
+        </div>
+    </body>
+</html>

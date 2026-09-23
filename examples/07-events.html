@@ -1,0 +1,30 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <title>Events</title>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <link rel="stylesheet" href="./main.css" />
+        <script type="module" src="/07-events.ts"></script>
+    </head>
+
+    <body>
+        <p><a href="/">Examples</a></p>
+        <h1>Events</h1>
+        <p>
+            The player is an <code>EventTarget</code>. Each event is logged with its
+            <code>detail</code>; <code>frame</code> is counted instead.
+        </p>
+        <div class="tiles"><div id="icon" class="icon"></div></div>
+        <div class="controls">
+            <button id="play">play</button>
+            <button id="reverse">play backwards</button>
+            <button id="loop">loop</button>
+            <button id="color">colour</button>
+            <button id="destroy">destroy</button>
+            <button id="create">create</button>
+        </div>
+        <p id="frames"></p>
+        <pre id="log"></pre>
+    </body>
+</html>

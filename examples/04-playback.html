@@ -1,0 +1,39 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <title>Playback</title>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <link rel="stylesheet" href="./main.css" />
+        <script type="module" src="/04-playback.ts"></script>
+    </head>
+
+    <body>
+        <p><a href="/">Examples</a></p>
+        <h1>Playback</h1>
+        <p>
+            Play, pause and stop; scrub with <code>progress</code>; loop, change the speed or the
+            direction.
+        </p>
+        <div class="tiles"><div id="icon" class="icon"></div></div>
+        <div class="controls">
+            <button id="play">play</button>
+            <button id="pause">pause</button>
+            <button id="stop">stop</button>
+            <input type="range" id="progress" min="0" max="1" step="0.001" value="0" />
+        </div>
+        <div class="controls">
+            <label><input type="checkbox" id="loop" /> loop</label>
+            <label>
+                speed
+                <select id="speed">
+                    <option>0.5</option>
+                    <option selected>1</option>
+                    <option>2</option>
+                </select>
+            </label>
+            <button id="direction">reverse</button>
+        </div>
+        <pre id="info"></pre>
+    </body>
+</html>
