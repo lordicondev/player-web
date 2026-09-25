@@ -170,7 +170,8 @@ of a segment is `segment[1] - 1`.
 finished. With options it starts a new playback, and the previous promise gets `false`.
 
 **The default state** plays when none is given; `null` or an unknown name picks it too.
-An icon without one plays the whole file, from its first state to the end of its last.
+An icon without one plays the whole file, from its first state to the end of its last. A file
+without markers has no states, and plays its own frames, `ip` to `op`.
 
 **Subclassing.** Every playback goes through `play()`, a state change during play included,
 so overriding that one method wraps them all.

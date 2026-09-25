@@ -22,7 +22,7 @@ import {
     type Renderer,
 } from './renderer.ts';
 import { Run } from './run.ts';
-import { resolveState } from './states.ts';
+import { resolveState, wholeFileOf } from './states.ts';
 import { StrokeWidth } from './stroke.ts';
 import type {
     IconData,
@@ -58,6 +58,8 @@ export class Player extends EventTarget {
     #destroyed = false;
 
     #state: IconState | null;
+    /** What plays without a state: the first state to the end of the last, or the whole file. */
+    #wholeFile: Segment;
     #direction: PlaybackDirection = 1;
     #speed = 1;
     #loop = false;
@@ -78,6 +80,7 @@ export class Player extends EventTarget {
         this.#copy = copy;
         this.#frameRate = data.fr || 30;
         this.#states = readStates(data);
+        this.#wholeFile = wholeFileOf(data, this.#states);
         this.#state = resolveState(this.#states, properties?.state);
         this.#controls = readControls(data, { renderer: true });
         this.#palette = new Palette(this.#controls, defaultColors(data));
@@ -98,11 +101,8 @@ export class Player extends EventTarget {
         const data = this.#copy ? structuredClone(this.#data) : this.#data;
         this.#data = null;
 
-        // Without a state, the file plays from its first state to its last.
-        if (this.#states.length) {
-            data.ip = this.#states[0].time;
-            data.op = stateSegment(this.#states[this.#states.length - 1])[1];
-        }
+        // Without a state, the file plays from its first state to its last (or ip to op).
+        [data.ip, data.op] = this.#wholeFile;
 
         const animation = createAnimation(this.#container, data, this.#segmentOfState());
         this.#animation = animation;
@@ -182,7 +182,7 @@ export class Player extends EventTarget {
             animation.setDirection(this.#direction);
             const target =
                 segment ??
-                (state !== undefined ? (this.#segmentOfState() ?? this.#wholeFile()) : null) ??
+                (state !== undefined ? (this.#segmentOfState() ?? this.#wholeFile) : null) ??
                 segmentOf(animation);
             loadSegment(animation, target, this.#direction);
         } else if (this.#atEnd()) {
@@ -278,7 +278,7 @@ export class Player extends EventTarget {
 
         const playing = this.playing;
         this.#settle(false);
-        loadSegment(animation, this.#segmentOfState() ?? this.#wholeFile(), this.#direction);
+        loadSegment(animation, this.#segmentOfState() ?? this.#wholeFile, this.#direction);
         if (playing) void this.play({ from: 'start', reverse: this.#direction < 0 });
     }
 
@@ -298,7 +298,7 @@ export class Player extends EventTarget {
      */
     get segment(): Segment {
         if (this.#animation) return segmentOf(this.#animation);
-        return this.#segmentOfState() ?? this.#wholeFile();
+        return this.#segmentOfState() ?? this.#wholeFile;
     }
 
     set segment(segment: Segment | null) {
@@ -307,7 +307,7 @@ export class Player extends EventTarget {
 
         this.#settle(false);
         this.direction = 1;
-        loadSegment(animation, segment ?? this.#segmentOfState() ?? this.#wholeFile(), 1);
+        loadSegment(animation, segment ?? this.#segmentOfState() ?? this.#wholeFile, 1);
     }
 
     /** The frame on screen, absolute. */
@@ -332,13 +332,6 @@ export class Player extends EventTarget {
 
     #segmentOfState(): Segment | null {
         return this.#state ? stateSegment(this.#state) : null;
-    }
-
-    /** From the first state to the end of the last. */
-    #wholeFile(): Segment {
-        const first = this.#states[0];
-        const last = this.#states[this.#states.length - 1];
-        return first && last ? [first.time, stateSegment(last)[1]] : [0, 0];
     }
 
     // How it plays

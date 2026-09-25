@@ -256,6 +256,51 @@ describe('segment and state', () => {
     });
 });
 
+describe('a file without markers', () => {
+    /** The lock icon without its markers: the file's own frames, [200, 260). */
+    function bare() {
+        return clock.track(new Player(container(), { ...lockIcon(), markers: [] }));
+    }
+
+    it('plays the whole file', async () => {
+        const player = bare();
+        expect(player.states).toEqual([]);
+        expect(player.state).toBeNull();
+        expect(player.segment).toEqual([200, 260]);
+        expect(player.frameCount).toBe(60);
+
+        const done = player.play({ from: 'start' });
+        clock.advance(1100);
+        await expect(done).resolves.toBe(true);
+        expect(player.frame).toBe(259);
+    });
+
+    it('goes back to the whole file for no state, the whole file, and no segment', async () => {
+        const player = bare();
+
+        const done = player.play({ state: null });
+        expect(player.segment).toEqual([200, 260]);
+        expect(player.frame).toBe(200);
+        clock.advance(1100);
+        await expect(done).resolves.toBe(true);
+
+        player.state = '*';
+        expect(player.segment).toEqual([200, 260]);
+
+        player.segment = [210, 221];
+        player.segment = null;
+        expect(player.segment).toEqual([200, 260]);
+    });
+
+    it('scrubs through the whole file', () => {
+        const player = bare();
+        player.progress = 0.5;
+        expect(player.frame).toBeCloseTo(229.5);
+        player.seek('end');
+        expect(player.frame).toBe(259);
+    });
+});
+
 describe('loop', () => {
     it('ends each round with loop, not complete, until stopped', async () => {
         const player = mount();

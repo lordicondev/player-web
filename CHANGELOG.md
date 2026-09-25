@@ -1,5 +1,14 @@
 # Changelog
 
+## 2.0.1
+
+### Fixed
+
+- An icon without markers plays its whole file, its own `ip` to `op`, wherever the whole file
+  is asked for: `play({ state: null })`, `state = '*'`, `segment = null`, and so a `sequence`
+  of the element. Such an icon has no states; it used to be left on an empty segment, with
+  `frame` at -1.
+
 ## 2.0.0
 
 The player is an `EventTarget`, frames are absolute, and every playback goes through one

@@ -1,6 +1,6 @@
 {
     "name": "@lordicon/web",
-    "version": "2.0.0",
+    "version": "2.0.1",
     "description": "Player for animated Lordicon icons: states, segments, colours and stroke on top of a small Lottie renderer.",
     "repository": "https://github.com/lordicondev/player-web",
     "homepage": "https://lordicon.com/",
